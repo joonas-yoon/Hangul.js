@@ -457,6 +457,14 @@
     function _shiftCharactor (char, reverse) {
         var o = "ㅂㅈㄷㄱㅅㅐㅔ";
         var t = "ㅃㅉㄸㄲㅆㅒㅖ";
+        if (reverse) { // 반대로 시프트(Shift)키를 없앤다.
+            var i = t.indexOf(char);
+            if (i !== -1) {
+                return o[i];
+            } else {
+                return char;
+            }
+        }
         var i = o.indexOf(char);
         if (i !== -1) {
             return t[i];
@@ -500,6 +508,20 @@
             return result.join('');
         } else {
             return _shiftCharactor(str);
+        }
+    };
+
+    var unshift = function (str) {
+        if (_isHangul(str.charCodeAt(0))) {
+            var arr = disassemble(str, true);
+            var result = [];
+            for (var i = 0; i < arr.length; i++) {
+                arr[i] = arr[i].map(s => _shiftCharactor(s, true));
+                result.push(assemble(arr[i]));
+            }
+            return result.join('');
+        } else {
+            return _shiftCharactor(str, true);
         }
     };
 
@@ -685,6 +707,7 @@
         obfuscate: obfuscate,
         obfuscateAll: obfuscateAll,
         shift: shift,
+        unshift: unshift,
         isHangul: function (c) {
             if (typeof c === 'string')
                 c = c.charCodeAt(0);

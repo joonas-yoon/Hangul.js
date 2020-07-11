@@ -39,11 +39,15 @@
       <form>
         <div class="form-group">
           <label for="input">입력 문장</label>
-          <textarea class="form-control" id="input" placeholder="아버지가 방에 들어가신다"></textarea>
+          <textarea class="form-control" id="input" placeholder="쉬프트 키가 안 빠져요"></textarea>
         </div>
         <div class="form-group">
-          <label for="output">출력 문장</label>
+          <label for="output">출력 문장 (Shift 적용)</label>
           <div class="form-control" id="output"></div>
+        </div>
+        <div class="form-group">
+          <label for="output2">출력 문장 (Shift 해제)</label>
+          <div class="form-control" id="output2"></div>
         </div>
       </form>
     </div>
@@ -63,6 +67,7 @@
     $('#input').addEventListener('keyup', function(){
       var input = this.value || '';
       $('#output').innerHTML = input.split('').map(Hangul.shift).join('');
+      $('#output2').innerHTML = input.split('').map(Hangul.unshift).join('');
     });
   });
 </script>
