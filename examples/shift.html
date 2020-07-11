@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hangul.js 시프트 예제</title>
+    <script src="../hangul.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Hangul.js 시프트 예제</h1>
+      <hr>
+      <ul class="nav nav-pills">
+        <li role="presentation"><a href="index.html">자모음 분리</a></li>
+        <li role="presentation" class="active"><a href="#">시프트</a></li>
+      </ul>
+      <br>
+      <p>이 예제는 입력으로 주어진 문장에 있는 한글을, 표준 두벌식 한글 자판 입력방식에서 시프트(Shift)키를 누르고 입력한 문장으로 보여줍니다.</p>
+      <p>한글이 아닌 문자(숫자, 특수문자 등)은 적용되지 않습니다.</p>
+      <table class="table table-stripped table-bordered">
+        <tr>
+          <th>입력</th>
+          <th>출력</th>
+        </tr>
+        <tr><td>ㄱ</td><td>ㄲ</td></tr>
+        <tr><td>ㄷ</td><td>ㄸ</td></tr>
+        <tr><td>ㅂ</td><td>ㅃ</td></tr>
+        <tr><td>ㅅ</td><td>ㅆ</td></tr>
+        <tr><td>ㅈ</td><td>ㅉ</td></tr>
+        <tr><td>ㅐ</td><td>ㅒ</td></tr>
+        <tr><td>ㅔ</td><td>ㅖ</td></tr>
+      </table>
+      
+      <ul>
+        <li>가나다라마바사아자차카타파하 &#8594; 까나따라마빠싸아짜차카타파하</li>
+        <li>쉬프트 키가 안 빠져요. 살려주세요. &#8594; 쒸프트 키까 안 빠쪄요. 쌀려쭈쎼요.</li>
+      </ul>
+
+      <form>
+        <div class="form-group">
+          <label for="input">입력 문장</label>
+          <textarea class="form-control" id="input" placeholder="쉬프트 키가 안 빠져요"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="output">출력 문장 (Shift 적용)</label>
+          <div class="form-control" id="output"></div>
+        </div>
+        <div class="form-group">
+          <label for="output2">출력 문장 (Shift 해제)</label>
+          <div class="form-control" id="output2"></div>
+        </div>
+      </form>
+    </div>
+
+<script>
+  function ready(fn) {
+    if (document.readyState != 'loading'){
+      fn();
+    } else {
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+  }
+
+  var $ = document.querySelector.bind(document);
+
+  ready(function(){
+    $('#input').addEventListener('keyup', function(){
+      var input = this.value;
+      $('#output').innerHTML = Hangul.shift(input);
+      $('#output2').innerHTML = Hangul.unshift(input);
+    });
+  });
+</script>
+
+  </body>
+</html>

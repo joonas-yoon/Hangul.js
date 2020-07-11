@@ -85,6 +85,14 @@
             ['ㅜ', 'ㅣ', 'ㅟ'],
             ['ㅡ', 'ㅣ', 'ㅢ']
         ],
+        /* 시프트(Shift) 키를 누를 수 있는 자음/모음의 원형 */
+        UNSHIFTED_CHARACTOR = [
+            'ㅂ' ,'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅐ', 'ㅔ'
+        ],
+        /* 시프트(Shift) 키를 누른 상태의 자음/모음 */
+        SHIFTED_CHARACTOR = [
+            'ㅃ', 'ㅉ', 'ㄸ', 'ㄲ', 'ㅆ', 'ㅒ', 'ㅖ'
+        ],
         CONSONANTS_HASH,
         CHO_HASH,
         JUNG_HASH,
@@ -453,6 +461,26 @@
         return result.join('');
     };
 
+    /* 자음 또는 모음에 시프트(Shift)키를 적용한다. */
+    function _shiftCharactor (char) {
+        var i = UNSHIFTED_CHARACTOR.indexOf(char);
+        if (i !== -1) {
+            return SHIFTED_CHARACTOR[i];
+        } else {
+            return char;
+        }
+    }
+
+    /* 자음 또는 모음에 시프트(Shift)키를 없앤다. */
+    function _unshiftCharactor (char) {
+        var i = SHIFTED_CHARACTOR.indexOf(char);
+        if (i !== -1) {
+            return UNSHIFTED_CHARACTOR[i];
+        } else {
+            return char;
+        }
+    }
+
     function _randomElement(array) {
         if (typeof array === 'undefined') {
             return undefined;
@@ -594,6 +622,7 @@
     Searcher.prototype.search = function (string) {
         return disassemble(string).join('').indexOf(this.disassembled);
     };
+
     /* string이 자음으로 끝나는지 확인 */
     var endsWithConsonant = function (string) {
         if (typeof string === 'object') {
@@ -619,6 +648,19 @@
         return disassemble(string).pop() === target;
     };
 
+    /* 시프트(Shift)키 */
+    var shift = function (str) {
+        var arr = disassemble(str);
+        arr = arr.map(_shiftCharactor);
+        return assemble(arr);
+    };
+
+    /* 시프트(Shift)키 해제 */
+    var unshift = function (str) {
+        var arr = disassemble(str);
+        arr = arr.map(_unshiftCharactor);
+        return assemble(arr);
+    };
 
     var hangul = {
         disassemble: disassemble,
@@ -634,6 +676,8 @@
         endsWith: endsWith,
         obfuscate: obfuscate,
         obfuscateAll: obfuscateAll,
+        shift: shift,
+        unshift: unshift,
         isHangul: function (c) {
             if (typeof c === 'string')
                 c = c.charCodeAt(0);
