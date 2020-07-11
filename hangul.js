@@ -462,78 +462,24 @@
     };
 
     /* 자음 또는 모음에 시프트(Shift)키를 적용한다. */
-    function _shiftCharactor (char, reverse) {
-        var o = UNSHIFTED_CHARACTOR,
-            t = SHIFTED_CHARACTOR,
-            i
-            ;
-        if (reverse) { // 반대로 시프트(Shift)키를 없앤다.
-            i = t.indexOf(char);
-            if (i !== -1) {
-                return o[i];
-            } else {
-                return char;
-            }
-        }
-        i = o.indexOf(char);
+    function _shiftCharactor (char) {
+        var i = UNSHIFTED_CHARACTOR.indexOf(char);
         if (i !== -1) {
-            return t[i];
+            return SHIFTED_CHARACTOR[i];
         } else {
             return char;
         }
     }
 
-    /* 시프트(Shift)키 */
-    var shift = function (str) {
-        // 완성형 한글에서 종성 ㅃ,ㅉ,ㄸ는 받침이 될 수 없다. 이를 해결한다.
-        // 복잡한 종성(ㄵ, ㄺ)등이 있는 경우도 시프트를 적용하지 않는다.
-        if (_isHangul(str.charCodeAt(0))) {
-            var arr = disassemble(str, true);
-            var result = [];
-            for (var i = 0; i < arr.length; i++) {
-                var char = arr[i];
-                var length = char.length;
-                // 초성은 항상 해당된다.
-                char[0] = _shiftCharactor(char[0]);
-                if (length == 2) { // ㄱㅏ 인 경우, 둘 다 된소리화 할 수 있다.                
-                    char[1] = _shiftCharactor(char[1]);
-                } else if (length == 3) { // ㄱㅏㅃ 또는 ㄱㅏㅅ 또는 ㄱㅗㅏ
-                    var shiftedJong = _shiftCharactor(char[2]);
-                    if (_isJong(shiftedJong)) { // 받침이 될 수 있는 경우만 적용
-                        char[2] = shiftedJong;
-                    }
-                } else if (length == 4) { // ㄱㅏㄹㅁ 또는 ㅇㅗㅏㅇ
-                    if (_isJung(arr[2])) { // ㅇㅗㅏㅇ
-                        var shiftedJong = _shiftCharactor(char[3]);
-                        if (_isJong(shiftedJong)) { // 받침이 될 수 있는 경우만 적용
-                            char[3] = shiftedJong;
-                        }
-                    } else {
-                        char[1] = _shiftCharactor(char[1]);
-                    }
-                } else if (length == 5) { // ㄱㅗㅏㄹㄱ
-                }
-                result.push(assemble(char));
-            }
-            return result.join('');
+    /* 자음 또는 모음에 시프트(Shift)키를 없앤다. */
+    function _unshiftCharactor (char) {
+        var i = SHIFTED_CHARACTOR.indexOf(char);
+        if (i !== -1) {
+            return UNSHIFTED_CHARACTOR[i];
         } else {
-            return _shiftCharactor(str);
+            return char;
         }
-    };
-
-    var unshift = function (str) {
-        if (_isHangul(str.charCodeAt(0))) {
-            var arr = disassemble(str, true);
-            var result = [];
-            for (var i = 0; i < arr.length; i++) {
-                arr[i] = arr[i].map(s => _shiftCharactor(s, true));
-                result.push(assemble(arr[i]));
-            }
-            return result.join('');
-        } else {
-            return _shiftCharactor(str, true);
-        }
-    };
+    }
 
     function _randomElement(array) {
         if (typeof array === 'undefined') {
@@ -676,6 +622,7 @@
     Searcher.prototype.search = function (string) {
         return disassemble(string).join('').indexOf(this.disassembled);
     };
+
     /* string이 자음으로 끝나는지 확인 */
     var endsWithConsonant = function (string) {
         if (typeof string === 'object') {
@@ -701,6 +648,19 @@
         return disassemble(string).pop() === target;
     };
 
+    /* 시프트(Shift)키 */
+    var shift = function (str) {
+        var arr = disassemble(str);
+        arr = arr.map(_shiftCharactor);
+        return assemble(arr);
+    };
+
+    /* 시프트(Shift)키 해제 */
+    var unshift = function (str) {
+        var arr = disassemble(str);
+        arr = arr.map(_unshiftCharactor);
+        return assemble(arr);
+    };
 
     var hangul = {
         disassemble: disassemble,

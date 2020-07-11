@@ -65,9 +65,9 @@
 
   ready(function(){
     $('#input').addEventListener('keyup', function(){
-      var input = this.value || '';
-      $('#output').innerHTML = input.split('').map(Hangul.shift).join('');
-      $('#output2').innerHTML = input.split('').map(Hangul.unshift).join('');
+      var input = this.value;
+      $('#output').innerHTML = Hangul.shift(input);
+      $('#output2').innerHTML = Hangul.unshift(input);
     });
   });
 </script>
