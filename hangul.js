@@ -85,6 +85,14 @@
             ['ㅜ', 'ㅣ', 'ㅟ'],
             ['ㅡ', 'ㅣ', 'ㅢ']
         ],
+        /* 시프트(Shift) 키를 누를 수 있는 자음/모음의 원형 */
+        UNSHIFTED_CHARACTOR = [
+            'ㅂ' ,'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅐ', 'ㅔ'
+        ],
+        /* 시프트(Shift) 키를 누른 상태의 자음/모음 */
+        SHIFTED_CHARACTOR = [
+            'ㅃ', 'ㅉ', 'ㄸ', 'ㄲ', 'ㅆ', 'ㅒ', 'ㅖ'
+        ],
         CONSONANTS_HASH,
         CHO_HASH,
         JUNG_HASH,
@@ -455,17 +463,19 @@
 
     /* 자음 또는 모음에 시프트(Shift)키를 적용한다. */
     function _shiftCharactor (char, reverse) {
-        var o = "ㅂㅈㄷㄱㅅㅐㅔ";
-        var t = "ㅃㅉㄸㄲㅆㅒㅖ";
+        var o = UNSHIFTED_CHARACTOR,
+            t = SHIFTED_CHARACTOR,
+            i
+            ;
         if (reverse) { // 반대로 시프트(Shift)키를 없앤다.
-            var i = t.indexOf(char);
+            i = t.indexOf(char);
             if (i !== -1) {
                 return o[i];
             } else {
                 return char;
             }
         }
-        var i = o.indexOf(char);
+        i = o.indexOf(char);
         if (i !== -1) {
             return t[i];
         } else {
